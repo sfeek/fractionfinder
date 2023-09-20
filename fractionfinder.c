@@ -1,5 +1,4 @@
 #include "ghcommon.h"
-#include "drillsize.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -29,13 +28,14 @@ void print_fraction(double v)
 }
 
 void lookup_drill_size(double v)
-{
-    FILE *file = fopen("drillsize.csv", "r");
+{    
     char line[20];
     char sz[20] = "";
     char last_sz[20] = "";
     double value;
     int flag = 1;
+
+    FILE *file = fopen("drillsize.csv", "r");
 
     if (file != NULL)
     {
@@ -49,7 +49,6 @@ void lookup_drill_size(double v)
             }
         }
     }
-
     
     if (file)
         fclose(file);
@@ -69,7 +68,6 @@ int print_surrounding_fractions(double v, int dnom)
 
     f = modf(v, &i);
     nf = f / (1 / (double)dnom);
-
     f1 = modf(nf, &i1);
 
     if (fabs(f - i1 / (double)dnom) < 1e-6)
@@ -80,13 +78,11 @@ int print_surrounding_fractions(double v, int dnom)
     }
 
     printf("\nNearest 64ths Fractions: ");
-
     print_fraction(i + i1 / (double)dnom);
     printf(" (%3.4f)", i1 / (double)dnom - f);
     printf("  &  ");
     print_fraction(i + (i1 + 1.0) / (double)dnom);
     printf(" (%3.4f)", (i1 + 1.0) / (double)dnom - f);
-
     printf("\n\nStandard Drill Sizes +/- 5%%:\n");
     lookup_drill_size(v);
     
@@ -102,11 +98,7 @@ int main(void)
     double nf;
     double df;
 
-    int metric_flag;
-
-    int n;
-
-    int i;
+    int metric_flag, n ,i;
 
     fraction fract;
     char *s = NULL;
