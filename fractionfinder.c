@@ -54,7 +54,7 @@ void lookup_drill_size(double v)
         fclose(file);
 
     if (flag)
-        printf("\n  Drill to large to lookup!");
+        printf("\n  Drill Size Not Found!");
 
     return;
 }
