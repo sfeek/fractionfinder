@@ -70,21 +70,14 @@ int print_surrounding_fractions(double v, int dnom)
     nf = f / (1 / (double)dnom);
     f1 = modf(nf, &i1);
 
-    if (fabs(f - i1 / (double)dnom) < 1e-6)
-    {
-        printf("\n\nStandard Drill Sizes +/- 5%%:\n");
-        lookup_drill_size(v);
-        return SUCCESS;
-    }
+    if (fabs(f - i1 / (double)dnom) < 1e-6) return SUCCESS;
 
-    printf("\nNearest 64ths Fractions: ");
+    printf("\nNearest 1/%d Fractions: ", dnom);
     print_fraction(i + i1 / (double)dnom);
     printf(" (%3.4f)", i1 / (double)dnom - f);
     printf("  &  ");
     print_fraction(i + (i1 + 1.0) / (double)dnom);
     printf(" (%3.4f)", (i1 + 1.0) / (double)dnom - f);
-    printf("\n\nStandard Drill Sizes +/- 5%%:\n");
-    lookup_drill_size(v);
     
     return SUCCESS;
 }
@@ -153,9 +146,18 @@ int main(void)
 
         printf("\nInches: %3.4f", v);
         printf("\nMM: %3.2f", mm);
-        printf("\nFraction: ");
+        printf("\n\nFraction: ");
         print_fraction(v);
+        printf("\n");
+
+        print_surrounding_fractions(v, 100);
         print_surrounding_fractions(v, 64);
+        print_surrounding_fractions(v, 32);
+        print_surrounding_fractions(v, 16);
+        print_surrounding_fractions(v, 10);
+
+        printf("\n\nStandard Drill Sizes +/- 5%%:\n");
+        lookup_drill_size(v);
 
         printf("\n\n");
     }
