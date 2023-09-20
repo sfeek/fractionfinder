@@ -70,7 +70,7 @@ int print_surrounding_fractions(double v, int dnom)
     nf = f / (1 / (double)dnom);
     f1 = modf(nf, &i1);
 
-    if (fabs(f - i1 / (double)dnom) < 1e-6) return SUCCESS;
+    if (float_compare(f, i1 / (double)dnom, 1e-6)) return SUCCESS;
 
     printf("\nNearest 1/%d Fractions: ", dnom);
     print_fraction(i + i1 / (double)dnom);
