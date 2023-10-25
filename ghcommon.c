@@ -432,6 +432,74 @@ int float_compare(double f1, double f2, double precision)
 		return FALSE;
 }
 
+/*
+	Transition smoothly between two values at a certain cutoff value
+	*rtn is a pointer to the return value, x = value, t0 = transition start value, t1 = transition end value, c = cut-off, w = slope or rate of cut off
+*/
+int transition(double *rtn, double x, double t0, double x1, double c, double w)
+{
+	if (w == 0.0)
+		return FAIL_PARAMETER;
+
+	double t = 1.0 + exp(-(c - x) / w);
+
+	if (t == 0.0)
+		return FAIL_NUMBER;
+
+	double sD = 1.0 / t;
+	*rtn = t0 + (x1 - t0) * (1 - sD);
+
+	return SUCCESS;
+}
+
+double normalize_angle_360(double angle)
+{
+	while (angle > 360.0)
+		angle -= 360.0;
+	while (angle < -360.0)
+		angle += 360.0;
+
+	return angle;
+}
+
+double mod(double a, double m)
+{
+	while (a > m)
+		a -= m;
+	while (a < -m)
+		a += m;
+
+	return a;
+}
+
+double normalize_angle_180(double angle)
+{
+	while (angle < -180.0)
+		angle += 360.0;
+	while (angle > 180.0)
+		angle -= 360.0;
+
+	return angle;
+}
+
+int angle_in_range(double testAngle, double a, double b)
+{
+	a -= testAngle;
+	b -= testAngle;
+
+	normalize_angle_180(a);
+	normalize_angle_180(b);
+
+	if (a * b >= 0)
+		return 0;
+	return fabs(a - b) < 180.0;
+}
+
+double distance(double x1, double y1, double x2, double y2)
+{
+	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
+}
+
 int string_to_double(const char *str, double *v)
 {
 	char *ptr;
@@ -505,6 +573,53 @@ double get_double(const char *display)
 			continue;
 
 		rtn = string_to_double(buffer, &value);
+
+		free_malloc(buffer);
+
+		if (rtn == SUCCESS)
+			return value;
+	}
+}
+
+double get_fraction(const char *display)
+{
+	char *buffer = NULL;
+	double value;
+	int i,n,d;
+	int num_filled;
+	int rtn = FAIL;
+
+	while (TRUE)
+	{
+		if (get_string(&buffer, display) == 0)
+			continue;
+
+		if (strstr(buffer,"/"))
+		{
+			num_filled = sscanf(buffer,"%d %d/%d", &i, &n, &d);
+
+			if (num_filled == 3) 
+			{
+				rtn = SUCCESS;
+				if (i >= 0.0)
+					value = (double)i + (double)n / (double)d;
+				else
+					value = (double)i - (double)n / (double)d;
+			}
+			else
+			{
+				num_filled = sscanf(buffer,"%d/%d", &n, &d);
+				if (num_filled == 2)
+				{
+					rtn = SUCCESS;
+					value = (double)n / (double)d;
+				}
+			}
+    	} 
+		else 
+		{
+			rtn = string_to_double(buffer, &value);
+		}
 
 		free_malloc(buffer);
 

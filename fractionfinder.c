@@ -132,7 +132,7 @@ int main(void)
             free_malloc(s);
         }
 
-        v = get_double("\nEnter a decimal number or 0 to quit: ");
+        v = get_fraction("\nEnter a decimal or fractional number or 0 to quit: ");
 
         v = fabs(v);
 
