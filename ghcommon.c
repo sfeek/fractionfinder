@@ -1,3 +1,4 @@
+// Version 2.5
 #include "ghcommon.h"
 
 #ifdef _WIN32
@@ -592,28 +593,51 @@ double get_fraction(const char *display)
 	while (TRUE)
 	{
 		if (get_string(&buffer, display) == 0)
+		{
+			free_malloc(buffer);
 			continue;
+		}
 
 		if (strstr(buffer,"/"))
 		{
 			num_filled = sscanf(buffer,"%d %d/%d", &i, &n, &d);
 
-			if (num_filled == 3) 
+			switch(num_filled)
 			{
-				rtn = SUCCESS;
-				if (i >= 0.0)
-					value = (double)i + (double)n / (double)d;
-				else
-					value = (double)i - (double)n / (double)d;
-			}
-			else
-			{
-				num_filled = sscanf(buffer,"%d/%d", &n, &d);
-				if (num_filled == 2)
-				{
+				case 1:
+
+					sscanf(buffer,"%d/%d", &n, &d);
+
+					if (d == 0) 
+					{
+						rtn = FAIL_NUMBER;
+						break;
+					}
+
 					rtn = SUCCESS;
 					value = (double)n / (double)d;
-				}
+
+					break;
+
+				case 3:
+
+					if (d == 0) 
+					{
+						rtn = FAIL_NUMBER;
+						break;
+					}
+
+					rtn = SUCCESS;
+					if (i >= 0.0)
+						value = (double)i + (double)n / (double)d;
+					else
+						value = (double)i - (double)n / (double)d;
+
+					break;
+					
+				default:
+					rtn = FAIL;
+					break;
 			}
     	} 
 		else 
@@ -622,9 +646,8 @@ double get_fraction(const char *display)
 		}
 
 		free_malloc(buffer);
-
-		if (rtn == SUCCESS)
-			return value;
+		
+		if (rtn == SUCCESS) return value;
 	}
 }
 
