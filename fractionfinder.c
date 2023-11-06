@@ -97,6 +97,8 @@ int main(void)
     char *s = NULL;
     size_t count;
 
+    printf("\n\n Fraction Finder v1.2\n");
+
     while (TRUE)
     {
         while (TRUE)
@@ -150,6 +152,7 @@ int main(void)
         print_fraction(v);
         printf("\n");
 
+        print_surrounding_fractions(v, 128);
         print_surrounding_fractions(v, 100);
         print_surrounding_fractions(v, 64);
         print_surrounding_fractions(v, 32);
