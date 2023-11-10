@@ -158,6 +158,9 @@ int main(void)
         print_surrounding_fractions(v, 32);
         print_surrounding_fractions(v, 16);
         print_surrounding_fractions(v, 10);
+        print_surrounding_fractions(v, 8);
+        print_surrounding_fractions(v, 4);
+        print_surrounding_fractions(v, 2);
 
         printf("\n\nStandard Drill Sizes +/- 5%%:\n");
         lookup_drill_size(v);
